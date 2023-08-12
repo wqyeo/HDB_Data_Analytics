@@ -2,14 +2,17 @@
 import os
 import pandas as pd
 
-def merge_csv_files(file1_path, file2_path, output_path):
-    df1 = pd.read_csv(file1_path)
-    df2 = pd.read_csv(file2_path)
+def merge_csv_files(file1, file2, output_file):
+    df1 = pd.read_csv(file1)
+    df2 = pd.read_csv(file2)
 
-    # Concat based on headers.
-    df2.columns = df1.columns
+    # Reorder the columns of the second DataFrame to match the first
+    df2 = df2[df1.columns]
     merged_df = pd.concat([df1, df2], ignore_index=True)
-    merged_df.to_csv(output_path, index=False)
+
+    # Remove dupes
+    merged_df.drop_duplicates(inplace=True)
+    merged_df.to_csv(output_file, index=False)
 
 # NOTE: Set file locations. Output file will be in the same path as well...
 file_locations = os.path.join("src", "datasets")
